@@ -2,39 +2,34 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:mugpi/models/banks.dart';
 
 class Nordigen{
 
   late String bank = "";
   late Map mmap;
-  late var test;
 
 
-  Future <void> getBanks() async{
+  Future<List<Banks>> getBanks() async{
 
-    String token = "asd";
-
-    try {
-      var url = Uri.parse("https://ob.nordigen.com/api/v2/institutions/?country=gb");
+    String token = "Bearer fghfghjfghjfghjf";
+      var url = Uri.parse("https://ob.nordigen.com/api/v2/institutions/?country=pl");
       var response = await get(url, headers: {
         "accept": "application/json",
         "Authorization": token,
       }
-
       );
 
-    //  mmap = data;
+      if (response.statusCode == 200) {
 
-    //  String offset = data['utc_offset'];
+        final List result = json.decode(response.body);
 
-      test = jsonDecode(response.body);
+        return result.map((e) => Banks.fromJson(e)).toList();
 
-    //  print(jsonDecode(response.body));
+      } else {
 
+        throw Exception('Failed to load banks');
 
-    }catch(e){
-      print ('error: $e');
-    }
+      }
   }
-
 }
